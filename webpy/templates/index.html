@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<!-- A placeholder page for testing -->
+<html>
+	<head>
+		<title>WebPy</title>
+		<style>
+body
+{
+
+}
+		</style>
+	</head>
+	<body>
+		<form method=POST>
+			<textarea name="program" type=textarea rows=30 cols=80>{% if program %}{{program}}{% endif %}</textarea>
+			<button type="submit">Run</button>
+		</form>
+
+		{% if output %}
+		<div id="program_output" class="textbox">
+			{{output}}
+		</div>
+		{% endif %}
+
+	</body>
+</html>
+
