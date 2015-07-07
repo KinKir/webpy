@@ -24,7 +24,7 @@ simplify things.
 ## Installation
 
 ### Install Requirements
-`pip install -r requirements.txt1 
+`pip install -r requirements.txt1`
 
 ### Run
-`python src/main.py`
+`python src/webpy.py`
