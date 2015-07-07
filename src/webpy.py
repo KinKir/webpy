@@ -2,7 +2,7 @@ from flask import Flask
 
 DEBUG = True
 SECRET_KEY = ''
-IP_ADDRESS = '0.0.0.0'
+IP_ADDRESS = '127.0.0.1'
 PORT_NUMBER = 8080
 PROCESSES = 3
 
