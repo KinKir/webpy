@@ -21,3 +21,10 @@ will have longer computation time than their anonymous counterparts.
 The project is implemented in Python using the Flask micro-framework to
 simplify things.
 
+## Installation
+
+### Install Requirements
+`pip install -r requirements.txt1 
+
+### Run
+`python src/main.py`
