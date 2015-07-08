@@ -8,6 +8,7 @@ class Plan(Base):
     name = Column(String(80), unique=True)
     cpu_time = Column(Integer)
     cpu_quota = Column(Integer)
+    active = Column(Integer)
 
     def __init__(self, name, time, quota):
         self.name = name
@@ -23,12 +24,10 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(80), unique=True)
     email = Column(String(120), unique=True)
-    plan_id = Column(Integer)  # 0 plan is anon user
 
-    def __init__(self, username, email, plan=0):
+    def __init__(self, username, email):
         self.username = username
         self.email = email
-        self.plan = plan
 
     def __repr__(self):
-        return "<User: %r:%r>" % self.username, self.plan
+        return "<User: %r:%r>" % (self.username, self.email)

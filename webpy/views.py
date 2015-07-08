@@ -1,4 +1,5 @@
 from webpy import app
+from webpy.user_manager import user_exists
 
 from flask import render_template, request, redirect, url_for
 
@@ -8,6 +9,10 @@ def login():
     if request.method == 'GET':
         return render_template('login.html')
     elif request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        print("Searching for:", username, ":", email)
+        print(user_exists(username, email))
         # Check that user exists and log them in if they exist
         return redirect(url_for('index'))
 
