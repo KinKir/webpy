@@ -8,7 +8,8 @@
     <title>Python Server</title>
 
     <!-- Bootstrap -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+	 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -18,18 +19,56 @@
     <![endif]-->
   </head>
   <body>
-	<textarea rows="25" cols="150">{{PyInput}}
-	</textarea>
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Python Interpreter</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <form class="navbar-form navbar-right">
+              <div class="form-group">
+                <input type="text" placeholder="Email" class="form-control">
+              </div>
+              <div class="form-group">
+                <input type="password" placeholder="Password" class="form-control">
+              </div>
+              <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
+          </div><!--/.navbar-collapse -->
+        </div>
+      </nav>
+      <br>
+      <br>
+      <div class="container-fluid">
+        <h1>Welcome</h1>
+        <p>Instructions go here.<br><strong>Note:</strong> You can expand the text area by clicking and dragging the lower right-hand corner of the text box</p>
+        <br>
+      </div>
+      <div class="container-fluid">
+        <div class="col-md-6">
+	         <textarea rows="25" cols="100">{{PyInput}}</textarea>
+           <br>
+           <input type="submit" value="Run">
+        </div>
+        <div class="col-md-6">
+          <textarea readonly rows="25" cols="100">{{PyOutput}}</textarea>
+          <br>
+        </div>
+      </div>
+	
 	<br>
-	<input type="submit" value="Run">
 	<br>
-	<br>
-	<textarea readonly rows="25" cols="150">{{PyOutput}}
-	</textarea>
+	
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	
+
   </body>
 </html>
