@@ -14,7 +14,7 @@ def interpret(conn, code):
     with io.StringIO() as buf, redirect_stdout(buf):
         # does not destroy scope, so you can destroy the server if you name your
         # variables wrong (or right if you are malicious)
-        exec(code)
+        exec(code, {}, {})
 
         #############################################
         # Run script sandboxed...
@@ -82,9 +82,9 @@ if __name__ == '__main__':
     bad_exec = "we do what we must, because we can."
     test_code = """
 def main():
-    print(blob)
-    print(bad_exec)
-
+    pass
+    # print(blob)  # These won't work
+    # print(bad_exec)
 print("This was a triumph, I'm making a note here, huge success")
 print("It's hard to over state my satisfaction")
 main()
@@ -96,3 +96,4 @@ main()
         sleep(0.2)
     print("Return code:", test_prog.stop())
     print(test_prog.get_output())
+    print("Back on the server:", blob)
