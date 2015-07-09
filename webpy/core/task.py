@@ -11,14 +11,10 @@ class Task(object):
         return len(self.program)
 
     def run(self):
-        if self.time == 0:  # If we can't be run anymore
-            self.retval = 1
-            self.program.kill()
-            return self.retval
         self.program.run()
 
     def kill(self):
-
+        pass
 
     def stop(self):
         self.program.stop()
