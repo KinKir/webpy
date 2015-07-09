@@ -12,6 +12,10 @@ from contextlib import redirect_stdout
 def interpret(conn, code):
     output = ""
     with io.StringIO() as buf, redirect_stdout(buf):
+        # does not destroy scope, so you can destroy the server if you name your
+        # variables wrong (or right if you are malicious)
+        exec(code)
+
         #############################################
         # Run script sandboxed...
         # Sandboxing is actually really difficult...
@@ -74,9 +78,15 @@ class Program(object):
 from time import sleep
 
 if __name__ == '__main__':
+    blob = "aperture science"
+    bad_exec = "we do what we must, because we can."
     test_code = """
 def main():
-    print("Hello")
+    print(blob)
+    print(bad_exec)
+
+print("This was a triumph, I'm making a note here, huge success")
+print("It's hard to over state my satisfaction")
 main()
 """
     test_prog = Program(test_code)
@@ -85,4 +95,4 @@ main()
         print("I'm still alive")
         sleep(0.2)
     print("Return code:", test_prog.stop())
-    print("Program output:\n", test_prog.get_output())
+    print(test_prog.get_output())
