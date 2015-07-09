@@ -16,6 +16,9 @@ body
 			<textarea name="program" type=textarea rows=30 cols=80>{% if program %}{{program}}{% endif %}</textarea>
 			<button type="submit">Run</button>
 		</form>
+		<form action="logout" method=GET>
+			<button type="submit">Logout</button>
+		</form>
 
 		{% if output %}
 		<div id="program_output" class="textbox">
