@@ -8,12 +8,18 @@ class Scheduler(object):
         self.queue = []         # tasks to be run
         self.die = False        # Kills threads
         self.join = False
-        self.runner = threading.Thread(target=self._proc, args=())
+        self.runner = threading.Thread(target=self._proc)
         self.task_lock = threading.Lock()  # The condition
         self.task_cv = threading.Condition(self.task_lock)
+        print("Main Thread:", threading.main_thread())
 
     # Does the actual heavy lifting for the scheduler
     def _proc(self):
+        print("Current Thread:", threading.current_thread(), "main:",
+                threading.main_thread())
+        if threading.current_thread() is threading.main_thread():
+            print("Bad, same processing thread and running thread")
+        print("Active threads:", threading.active_count())
         print("proc")
         # Do forever...
         while True:
@@ -62,7 +68,7 @@ class Scheduler(object):
 
     def run(self):
         print("Before runner")
-        self.runner.run()
+        self.runner.start()
         print("Passed runner")
 
     def stop(self):  # Kills self
