@@ -1,8 +1,9 @@
+from time import sleep
+import math
+import os
 import program
 import task
 import threading
-import os
-import math
 
 
 class Scheduler(object):
@@ -22,34 +23,22 @@ class Scheduler(object):
     # Does the actual heavy lifting for the scheduler
     def _proc(self):
         self.stopped = False
-        if threading.current_thread() is threading.main_thread():
-            print("Bad, same processing thread and running thread")
-        # Do forever...
         while True:
-            # Except for when we need to die
-            if self.die:
-                self.stopped = True
-                return
 
             # Block if there are no tasks to be run
             while not self.queue:
                 # If the queue is empty and we are joining, then return not
                 # sleep
-                if self.f_join:
+                if self.f_join or self.die:
                     self.stopped = True
                     return
                 self.task_cv.acquire()
-                if self.f_join:
-                    self.stopped = True
-                    return
                 self.task_cv.wait()
 
             # Check if we need to die before actually doing any work
             if self.die:
                 self.stopped = True
                 return
-
-            # A task is in the queue
             try:
 
                 queue_len = len(self.queue)
@@ -58,9 +47,13 @@ class Scheduler(object):
                     os.urandom(math.ceil(bits_required / 8)),
                     'little') % queue_len
                 t = self.queue.pop(item_index)
-                print("Running Task for user: {0}\n Slice: {1}, iterations: {2}\
-                      ".format(t.username, t.time_slice, t.time))
+                print("Running Task for user: {0}".format(t.username))
+
+                t.run()
+                sleep(t.time_slice / 1000)
                 t.time -= 1
+                if t.time:
+                    self.queue.append(t)
             except IndexError:
                 # If this occurs, there was some sort of weird slip.
                 # The system will still be fine though and should sleep on the
