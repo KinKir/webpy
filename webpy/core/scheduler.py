@@ -2,6 +2,7 @@ import program
 import task
 import threading
 import os
+import math
 
 
 class Scheduler(object):
@@ -13,7 +14,7 @@ class Scheduler(object):
         self.task_lock = threading.Lock()
         self.task_cv = threading.Condition(self.task_lock)
 
-        self.join_lock = threading.Lock() # Blocks reads and writes to f_join
+        self.join_lock = threading.Lock()  # Blocks reads and writes to f_join
         # We want a semaphore here. We can read many times until a writer enters
 
         self.stopped = True
@@ -50,18 +51,23 @@ class Scheduler(object):
 
             # A task is in the queue
             try:
-                item_index = int.from_bytes(os.urandom(40), 'little') % len(self.queue)
-                # item_index = int(os.urandom(40).encode('hex'), 16) % len(self.queue)
+
+                queue_len = len(self.queue)
+                bits_required = math.ceil(math.log2(queue_len))
+                item_index = int.from_bytes(
+                    os.urandom(math.ceil(bits_required / 8)),
+                    'little') % queue_len
                 t = self.queue.pop(item_index)
                 print("Running Task for user: {0}\n Slice: {1}, iterations: {2}\
                       ".format(t.username, t.time_slice, t.time))
                 t.time -= 1
-                print("Queue Size:", len(self.queue))
             except IndexError:
-                print("Something is wrong with this, but it should be okay")
+                # If this occurs, there was some sort of weird slip.
+                # The system will still be fine though and should sleep on the
+                # next iteration
+                pass
 
     def add(self, t):
-        # print("add")
         if self.f_join:
             return
         # Adds a new object to the
