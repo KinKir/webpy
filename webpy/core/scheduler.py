@@ -20,6 +20,10 @@ class Scheduler(object):
 
         self.stopped = True
 
+    @property
+    def empty(self):
+        return len(self.queue) == 0
+
     # Does the actual heavy lifting for the scheduler
     def _proc(self):
         self.stopped = False
@@ -33,6 +37,7 @@ class Scheduler(object):
                     self.stopped = True
                     return
                 self.task_cv.acquire()
+                print("waiting")
                 self.task_cv.wait()
 
             # Check if we need to die before actually doing any work
@@ -66,9 +71,11 @@ class Scheduler(object):
         # Adds a new object to the
         self.queue.append(t)
         try:
+            print("waking")
             self.task_cv.release()
             self.task_cv.notify()
         except RuntimeError:
+            print("missed waking")
             pass
 
     def run(self):
@@ -91,5 +98,4 @@ class Scheduler(object):
                 self.task_cv.notify()
             except RuntimeError:
                 pass
-        # print(type(self.runner))
         self.runner.join()

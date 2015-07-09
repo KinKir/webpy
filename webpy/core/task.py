@@ -14,7 +14,15 @@ class Task(object):
         self.program.run()
 
     def kill(self):
-        pass
+        self.program.kill()
 
     def stop(self):
         self.program.stop()
+
+    @property
+    def alive(self):
+        return self.program.alive
+
+    @property
+    def output(self):
+        return self.program.get_output()
