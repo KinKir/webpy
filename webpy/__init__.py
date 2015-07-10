@@ -12,5 +12,4 @@ def start_session():
 # @app.teardown_appcontext
 @app.teardown_request
 def shutdown_session(exception=None):
-    print("Teardown db_session")
     db_session.remove()
