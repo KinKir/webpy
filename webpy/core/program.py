@@ -1,6 +1,4 @@
 from multiprocessing import Process, Pipe
-# import os
-import sys
 import psutil
 
 import io
@@ -12,15 +10,16 @@ from contextlib import redirect_stdout
 def interpret(conn, code):
     output = ""
     with io.StringIO() as buf, redirect_stdout(buf):
-        # does not destroy scope, so you can destroy the server if you name your
-        # variables wrong (or right if you are malicious)
-        exec(code, {}, {})
-
-        #############################################
-        # Run script sandboxed...
-        # Sandboxing is actually really difficult...
-        #############################################
-        output = buf.getvalue()
+        try:
+            #############################################
+            # Run script sandboxed...
+            # Sandboxing is actually really difficult...
+            #############################################
+            # exectute code with local and global environment set to empty
+            exec(code, {}, {})
+            output = buf.getvalue()
+        except:
+            output = "Error in the program\n"
     conn.send(output)
     conn.close()
 
@@ -45,23 +44,19 @@ class Program(object):
         if not self.started:
             self.proc.start()
             self.proc_pid = self.proc.pid
-            print("process pid:", self.proc_pid)
         elif self.alive:
             p = psutil.Process(self.proc_pid)
             p.resume()
-
         self.started = True
-        print("Running program!")
 
     def kill(self):
         # kill the process
         self.proc.terminate()
-        self.proc.join()
         return self.proc.exitcode
 
     def stop(self):  # Pauses the program
-        self.output = self.parent_conn.recv()
         if not self.alive:
+            self.output = self.parent_conn.recv()
             self.proc.join()
             return self.proc.exitcode
         p = psutil.Process(self.proc_pid)
