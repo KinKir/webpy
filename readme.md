@@ -9,7 +9,7 @@ This is our self-adaptive systems project, using the information from the
 various users to limit CPU quota to ensure fair sharing among users.
 
 
-![Webapp image](https://raw.githubusercontent.com/etcwilde/webpy/core/webapp.png)
+![Webapp image](https://raw.githubusercontent.com/etcwilde/webpy/core/webpy.png)
 
 ## Policy Driven
 
@@ -30,4 +30,9 @@ simplify things.
 `pip install -r requirements.txt1`
 
 ### Run
-`python src/webpy.py`
+
+Front-end server:
+`python run_server.py`
+
+Backend CPU Scheduler:
+`python run_scheduler.py`
