@@ -42,14 +42,13 @@ class Task(Base):
     id = Column(Integer, primary_key=True)
     user = Column(Integer, ForeignKey('users.id'))
     plan = Column(Integer, ForeignKey('plans.id'))
+    errored = Column(Boolean)
     finished = Column(Boolean)
     timed_out = Column(Boolean)
 
     def __init__(self, user, plan):
         self.user = user
         self.plan = plan
-        self.finished = False
-        self.timed_out = False
 
     def set_finished(self, timed_out=False):
         self.finished = True
