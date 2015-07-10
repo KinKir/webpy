@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 from webpy.database import Base
+from sqlalchemy.orm import relationship
+from sqlalchemy.schema import ForeignKey
 
 
 class Plan(Base):
@@ -8,12 +10,13 @@ class Plan(Base):
     name = Column(String(80), unique=True)
     cpu_time = Column(Integer)
     cpu_quota = Column(Integer)
-    active = Column(Integer)
+    tasks = relationship('Tasks')
 
     def __init__(self, name, time, quota):
         self.name = name
         self.cpu_time = time
         self.cpu_quota = quota
+
 
     def __repr__(self):
         return '<Plan: %r:%d:%d>' % (self.name, self.cpu_time, self.cpu_quota)
@@ -24,6 +27,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(80), unique=True)
     email = Column(String(120), unique=True)
+    tasks = relationship('Tasks')
 
     def __init__(self, username, email):
         self.username = username
@@ -31,3 +35,29 @@ class User(Base):
 
     def __repr__(self):
         return "<User: %r:%r>" % (self.username, self.email)
+
+
+class Task(Base):
+    __tablename__ = 'tasks'
+    id = Column(Integer, primary_key=True)
+    user = Column(Integer, ForeignKey('users.id'))
+    plan = Column(Integer, ForeignKey('plans.id'))
+    finished = Column(Boolean)
+    timed_out = Column(Boolean)
+
+    def __init__(self, user, plan):
+        self.user = user
+        self.plan = plan
+        self.finished = False
+        self.timed_out = False
+
+    def set_finished(self, timed_out=False):
+        self.finished = True
+        self.timed_out = timed_out
+
+    def __repr__(self):
+        return "<Task: %d: (%d %d) running: %s(%s)>" % (id,
+                                                        self.user,
+                                                        self.plan,
+                                                        self.finished,
+                                                        self.timed_out)
