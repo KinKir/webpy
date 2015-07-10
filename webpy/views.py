@@ -3,6 +3,7 @@ from webpy.user_manager import user_exists, add_user
 
 from flask import render_template, request, redirect, url_for, session
 
+import xmlrpc.client
 
 @app.route('/logout')
 def logout():
@@ -43,7 +44,7 @@ def index():
         print('User request: %s' % session['username'])
         return render_template('index.html')
     elif request.method == 'POST':
-        output = request.form['program']
-        program = output
-        print(output)
+        program = request.form['program']
+        server = xmlrpc.client.ServerProxy('http://localhost:8000')
+        output = server.push(session['username'], 1, program)
         return render_template('index.html', program=program, output=output)
