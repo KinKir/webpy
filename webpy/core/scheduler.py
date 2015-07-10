@@ -15,7 +15,7 @@ class Scheduler(object):
         self.task_lock = threading.Lock()
         self.task_cv = threading.Condition(self.task_lock)
 
-        self.join_lock = threading.Lock()  # Blocks reads and writes to f_join
+        # self.join_lock = threading.Lock()  # Blocks reads and writes to f_join
         # We want a semaphore here. We can read many times until a writer enters
 
         self.stopped = True
@@ -28,37 +28,27 @@ class Scheduler(object):
     def _proc(self):
         self.stopped = False
         while True:
-
             # Block if there are no tasks to be run
+            # TODO: Get rid of the freaking spin lock at the most convinient time
             while not self.queue:
-                # If the queue is empty and we are joining, then return not
-                # sleep
-                if self.f_join or self.die:
-                    self.stopped = True
-                    return
-                self.task_cv.acquire()
-                print("waiting")
-                self.task_cv.wait()
-
-            # Check if we need to die before actually doing any work
-            if self.die:
-                self.stopped = True
-                return
+                print("Spin Locking...")
+                if self.die or self.f_join:
+                   self.stopped = True
+                   return
+                sleep(0.5)
             try:
-
-                queue_len = len(self.queue)
-                bits_required = math.ceil(math.log2(queue_len))
-                item_index = int.from_bytes(
-                    os.urandom(math.ceil(bits_required / 8)),
-                    'little') % queue_len
-                t = self.queue.pop(item_index)
-                print("Running Task for user: {0}".format(t.username))
-
-                t.run()
-                sleep(t.time_slice / 1000)
-                t.time -= 1
-                if t.time:
-                    self.queue.append(t)
+              queue_len = len(self.queue)
+              bits_required = math.ceil(math.log2(queue_len))
+              item_index = int.from_bytes(
+                  os.urandom(math.ceil(bits_required / 8)),
+                  'little') % queue_len
+              t = self.queue.pop(item_index)
+              print("Running Task for user: {0}".format(t.username))
+              t.run()
+              sleep(t.time_slice / 1000)
+              t.time -= 1
+              if t.time:
+                  self.queue.append(t)
             except IndexError:
                 # If this occurs, there was some sort of weird slip.
                 # The system will still be fine though and should sleep on the
@@ -68,34 +58,26 @@ class Scheduler(object):
     def add(self, t):
         if self.f_join:
             return
-        # Adds a new object to the
         self.queue.append(t)
-        try:
-            print("waking")
-            self.task_cv.release()
-            self.task_cv.notify()
-        except RuntimeError:
-            print("missed waking")
-            pass
 
     def run(self):
         self.runner.start()
 
     def stop(self):  # Kills self
         self.die = True
-        try:
-            self.task_cv.release()
-            self.task_cv.notify()
-        except RuntimeError:
-            pass
+        # try:
+        #     self.task_cv.release()
+        #     self.task_cv.notify()
+        # except RuntimeError:
+        #     pass
         self.runner.join()
 
     def join(self):  # Wait for all processes to stop before killing self
         self.f_join = True
-        while not self.stopped:
-            try:
-                self.task_cv.release()
-                self.task_cv.notify()
-            except RuntimeError:
-                pass
+        # while not self.stopped:
+        #     try:
+        #         self.task_cv.release()
+        #         self.task_cv.notify()
+        #     except RuntimeError:
+        #         pass
         self.runner.join()
