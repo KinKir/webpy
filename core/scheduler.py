@@ -3,7 +3,7 @@ import math
 import os
 
 import threading
-import task
+import core.task
 
 
 class Scheduler(object):
@@ -26,10 +26,10 @@ class Scheduler(object):
             # Block if there are no tasks to be run
             # TODO: Get rid of the freaking spin lock
             while not self.queue:
-                 if self.die or self.f_join:
-                     self.stopped = True
-                     return
-                 sleep(0.5)
+                if self.die or self.f_join:
+                    self.stopped = True
+                    return
+                sleep(0.5)
             try:
                 queue_len = len(self.queue)
                 bits_required = math.ceil(math.log2(queue_len))
@@ -56,10 +56,10 @@ class Scheduler(object):
                     self.queue.append((t, output_index))
 
             except IndexError:
-                 # If this occurs, there was some sort of weird slip.
-                 # The system will still be fine though and should sleep on
-                 # the next iteration
-                 pass
+                # If this occurs, there was some sort of weird slip.
+                # The system will still be fine though and should sleep on
+                # the next iteration
+                pass
 
     def add(self, t):
         if self.f_join or self.die:
