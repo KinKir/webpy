@@ -14,7 +14,13 @@ t3 = task.Task(program.Program(code3), "Sean", 1, 250)  # Bronze
 
 server = xmlrpc.client.ServerProxy('http://localhost:8000')
 print(server.system.listMethods())
-server.add(t1)
-server.add(t2)
-server.add(t3)
+ev_req = server.push("Evan", 1, code1)
+print(ev_req, end="")
+nav_req = server.push("Nav", 2, code2)
+print(nav_req, end="")
+sean_req = server.push("Sean", 3, code3)
+print(sean_req, end="")
 
+# print(server.push(t1))
+# print(server.push(t2))
+# print(server.push(t3))
