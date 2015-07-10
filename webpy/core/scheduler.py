@@ -12,12 +12,6 @@ class Scheduler(object):
         self.die = False        # Kills threads
         self.f_join = False
         self.runner = threading.Thread(target=self._proc)
-        self.task_lock = threading.Lock()
-        self.task_cv = threading.Condition(self.task_lock)
-
-        # self.join_lock = threading.Lock()  # Blocks reads and writes to f_join
-        # We want a semaphore here. We can read many times until a writer enters
-
         self.stopped = True
 
     @property
@@ -31,7 +25,6 @@ class Scheduler(object):
             # Block if there are no tasks to be run
             # TODO: Get rid of the freaking spin lock at the most convinient time
             while not self.queue:
-                print("Spin Locking...")
                 if self.die or self.f_join:
                    self.stopped = True
                    return
@@ -57,27 +50,20 @@ class Scheduler(object):
 
     def add(self, t):
         if self.f_join:
-            return
+            return -1
         self.queue.append(t)
+        # wait until we are processed
 
-    def run(self):
+
+
+
+    def run(self):  # Starts the whole system in motion
         self.runner.start()
 
     def stop(self):  # Kills self
         self.die = True
-        # try:
-        #     self.task_cv.release()
-        #     self.task_cv.notify()
-        # except RuntimeError:
-        #     pass
         self.runner.join()
 
     def join(self):  # Wait for all processes to stop before killing self
         self.f_join = True
-        # while not self.stopped:
-        #     try:
-        #         self.task_cv.release()
-        #         self.task_cv.notify()
-        #     except RuntimeError:
-        #         pass
         self.runner.join()

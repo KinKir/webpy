@@ -16,8 +16,11 @@ def main():
 
     sched = scheduler.Scheduler()
     sched.run()
+    sleep(1)
     sched.add(t1)
+    sleep(0.25)
     sched.add(t2)
+    sleep(0.5)
     sched.add(t3)
     sched.join()
 
