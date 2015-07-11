@@ -1,5 +1,3 @@
-from mape.monitor import Monitor
-
-m = Monitor()
-print(m.total_tasks())
-print(m.tasks())
+from mape import MAPELoop
+mapeloop = MAPELoop()
+mapeloop.run()

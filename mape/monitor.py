@@ -1,5 +1,5 @@
-from mape import db_session, Task
-from mape import func
+from mape.database import db_session, func
+from mape.models import Task
 
 
 # An interface between the database and the rest of the loop

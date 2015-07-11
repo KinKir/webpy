@@ -1,9 +1,6 @@
-from webpy import Account_Policies
-from webpy import db_session
-from webpy.monitor import Monitor
+from mape.models import Account_Policies
+from mape.database import db_session
 
 
 class Analyer(object):
-
-    def pollMonitor(self):
-        pass
+    pass
