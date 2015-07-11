@@ -6,6 +6,9 @@
 		<title>WebPy|Login</title>
 	</head>
 	<body>
+		{% if not plans%}
+		<p>Error: Plans Not set</p>
+		{% endif %}
 		{% with messages = get_flashed_messages() %}
 		{% if messages %}
 		{% for message in messages %}
@@ -16,9 +19,12 @@
 		<form method=POST>
 			<input type="text" name="username">
 			<input type="text" name="email"><br>
-			<input type="radio" name="plan" value="0">Anon $0/hour<br>
-			<input type="radio" name="plan" value="1">Normal $1/hour<br>
-			<input type="radio" name="plan" value="2">Gold $4/hour<br>
+			{% for plan in plans %}
+			<input type="radio" name="plan" value="{{plan.id}}">
+			{{plan.name}} Time: {{(plan.cpu_time * plan.cpu_quota)
+			/ 1000}} seconds
+			At: ${{plan.price}} per second<br>
+			{% endfor %}
 			<button type="submit">Login</input>
 		</form>
 	</body>

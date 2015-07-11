@@ -1,5 +1,6 @@
 from webpy import app
 from webpy.user_manager import user_exists, add_user
+import webpy.models
 
 from flask import render_template, request, redirect, url_for, session, flash
 
@@ -21,7 +22,8 @@ def login():
         return redirect(url_for('index'))
     else:
         if request.method == 'GET':
-            return render_template('login.html')
+            plans = webpy.models.Plan.query.all()
+            return render_template('login.html', plans=plans)
         elif request.method == 'POST':
             form_username = request.form['username']
             form_email = request.form['email']
@@ -32,6 +34,12 @@ def login():
                 add_user(form_username, form_email)
                 session['username'] = form_username
                 return redirect(url_for('index'))
+
+
+# @app.route('/admin', method=["GET", "POST"])
+# def administer():
+#     if 'username' not in session:
+#         return redirect(url_for('login'))
 
 
 @app.route('/', methods=['GET', 'POST'])

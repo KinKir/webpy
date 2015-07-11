@@ -10,13 +10,14 @@ class Plan(Base):
     name = Column(String(80), unique=True)
     cpu_time = Column(Integer)
     cpu_quota = Column(Integer)
-    tasks = relationship('Tasks')
+    price = Column(Integer)
+    tasks = relationship('Task')
 
-    def __init__(self, name, time, quota):
+    def __init__(self, name, time, quota, price):
         self.name = name
         self.cpu_time = time
         self.cpu_quota = quota
-
+        self.price = price
 
     def __repr__(self):
         return '<Plan: %r:%d:%d>' % (self.name, self.cpu_time, self.cpu_quota)
@@ -27,7 +28,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(80), unique=True)
     email = Column(String(120), unique=True)
-    tasks = relationship('Tasks')
+    tasks = relationship('Task')
 
     def __init__(self, username, email):
         self.username = username
