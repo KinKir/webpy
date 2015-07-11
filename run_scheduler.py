@@ -18,7 +18,7 @@ from sqlalchemy.schema import ForeignKey
 from sqlalchemy.sql.expression import Select, select
 # import sqlalchemy.sql.expression
 
-engine = create_engine('sqlite:////tmp/db/webpy.db', convert_unicode=True)
+engine = create_engine('sqlite:///db/webpy.db', convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
@@ -83,7 +83,7 @@ class Task(Base):
                                                         self.finished,
                                                         self.timed_out)
 
-class RequestHandler(SimpleXMLRPCRequestHandler): # Limit to a path
+class RequestHandler(SimpleXMLRPCRequestHandler):  # Limit to a path
     rpc_paths = ('/RPC2',)
 
 
@@ -103,13 +103,14 @@ class SchedServer(object):
     def push(self, username, policy_number, code):
         user_id = db_session.query(User.id).filter(User.username == username).one()[0]
         db_task = Task(user_id, policy_number)
+
         t = task.Task(program.Program(code), username, 3, 1000)
         index = self.sched.add(t)
-        db_session.add(db_task)
-        db_session.commit()
         if index == -1:
             print("Shutting down")
             return -1
+        db_session.add(db_task)
+        db_session.commit()
         ret_val = self.sched.get(index)
         while ret_val is None:
             ret_val = self.sched.get(index)

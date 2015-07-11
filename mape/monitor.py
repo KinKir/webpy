@@ -8,9 +8,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Boolean, func
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import ForeignKey
-# from sqlalchemy.sql.expression import Select, select
 
-engine = create_engine('sqlite:////tmp/db/webpy.db', convert_unicode=True)
+engine = create_engine('sqlite:///../db/webpy.db', convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
