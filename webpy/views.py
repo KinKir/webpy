@@ -27,6 +27,9 @@ def login():
         elif request.method == 'POST':
             form_username = request.form['username']
             form_email = request.form['email']
+            form_plan = request.form['plan']
+            print("Form Plan:", form_plan)
+            session['plan'] = form_plan
             if user_exists(form_username, form_email):
                 session['username'] = form_username
                 return redirect(url_for('index'))
@@ -57,7 +60,8 @@ def index():
         try:
             program = request.form['program']
             server = xmlrpc.client.ServerProxy('http://localhost:8000')
-            output = server.push(session['username'], 1, program)
+            print("form plan sending:", session['plan'])
+            output = server.push(session['username'], session['plan'], program)
             return render_template('index.html', program=program, output=output)
         except KeyError:
             flash("You were automatically logged out")
