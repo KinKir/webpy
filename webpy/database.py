@@ -15,7 +15,6 @@ Base.query = db_session.query_property()
 
 # Imports all models and generates metadata
 def init_db():
-    print("init db")
     import webpy.models
     Base.metadata.create_all(bind=engine)
 
