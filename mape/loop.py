@@ -7,6 +7,7 @@ from mape.plan import Planner
 
 from time import sleep
 
+
 class MAPELoop(object):
     monitor = None
     analyzer = None
@@ -23,10 +24,13 @@ class MAPELoop(object):
         while True:
             total_tasks = self.monitor.total_tasks()
             task_breakdown = self.monitor.tasks()
-            print(task_breakdown)
-            print(total_tasks)
+            plan_count = self.monitor.get_plan_count()
+            # print(self.monitor.task_count(3))
+            analysis = self.analyzer.analyze(plan_count, total_tasks, task_breakdown)
+            print(analysis)
             sleep(0.5)
-            sleep(0.5)
+
+
 if __name__ == "__main__":
     m = MAPELoop()
     m.run()
