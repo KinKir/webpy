@@ -1,9 +1,8 @@
-from sqlalchemy import Column, Integer, String, Boolean
-from webpy.database import Base
-from sqlalchemy.orm import relationship
-from sqlalchemy.schema import ForeignKey
+from mape.database import Column, Integer, String, Boolean, Base
+from mape.database import relationship, ForeignKey
 
 
+# Models
 class Plan(Base):
     __tablename__ = 'plans'
     id = Column(Integer, primary_key=True)

@@ -26,16 +26,12 @@
 					<a class="navbar-brand" href="#">WebPy</a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
-					<!-- Not Supported Yet
-	     <div class="form-group">
-	     <input type="text" placeholder="Email" class="form-control">
-	     </div>
-	     <div class="form-group">
-	     <input type="password" placeholder="Password" class="form-control">
-	     </div>
-	     <button type="submit" class="btn btn-success">Sign in</button>
-	     </form>
-					-->
+					<div class="pull-right">
+						<div class="form-group">
+							<a href="admin" class="btn btn-success">Administration</a>
+							<a href="logout" class="btn btn-default">Logout</a>
+						</div>
+					</div>
 				</div><!--/.navbar-collapse -->
 			</div>
 		</nav>
@@ -53,23 +49,21 @@
 				<div class="col-md-6">
 					<textarea name="program" rows="25" cols="100">{% if PyInput %}{{PyInput}} {% endif %}</textarea>
 					<br>
-					<button type="submit">Run</button>
+					<button type="submit" class="btn btn-primary">Run</button>
 				</div>
 			</form>
-				<div class="col-md-6">
-					<textarea readonly id="program_output" rows="25"
-			cols="100">{% if PyOutput %}{{PyOutput}}{% endif %}</textarea>
-					<br>
-				</div>
-		</div>
+			<div class="col-md-6">
+				<textarea readonly id="program_output" rows="25"
+					   cols="100">{% if PyOutput %}{{PyOutput}}{% endif %}</textarea>
+				<br>
+			</div>
+			<br>
+			<br>
 
-		<br>
-		<br>
-
-		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<!-- Include all compiled plugins (below), or include individual files as needed -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+			<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+			<!-- Include all compiled plugins (below), or include individual files as needed -->
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 	</body>
 </html>

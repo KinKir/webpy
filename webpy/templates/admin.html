@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<!-- A placeholder page for testing -->
+<html>
+	<head>
+		<title>WebPy</title>
+		<style>
+body
+{
+
+}
+		</style>
+	</head>
+	<body>
+		<a href="/">Webpy</a>
+		{% if not plans%}
+		<p>Error: Plans Not set</p>
+		{% endif %}
+
+		<form method="POST">
+			<!--
+			Price Function: <input type="text" name="price_function">
+			<p>Hint: The amount of money per second of operation.
+			"x * x*, "x + 10", etc...</p><br>
+
+			Goal Account Type:<p>Hint: The account type that you want most people to
+			use</p>
+			<br> -->
+
+			{% if plans %}
+			{% for plan in plans %}
+			<input type="radio" name="plan" value="{{plan.id}}" {%
+				   if plan.id == selected_plan
+				   %}checked{%endif%}>{{plan.name}}
+			{% endfor %}
+			{% endif %}
+			<br>
+			<button type="submit">Submit</button>
+		</form>
+	</body>
+</html>
+
