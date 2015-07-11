@@ -61,3 +61,12 @@ class Task(Base):
                                                         self.plan,
                                                         self.finished,
                                                         self.timed_out)
+
+
+class Account_Policies(Base):
+    __tablename__ = 'account_policies'
+    id = Column(Integer, primary_key=True)
+    maxmize_plan = Column(Integer, ForeignKey('plans.id'), unique=True)
+
+    def __init__(self, plan):
+        self.maxmize_plan = plan

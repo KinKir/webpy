@@ -2,6 +2,10 @@ from webpy import app
 from webpy.user_manager import user_exists, add_user
 import webpy.models
 
+from sqlalchemy.sql import exists
+
+from webpy.database import db_session
+
 from flask import render_template, request, redirect, url_for, session, flash
 
 import xmlrpc.client
@@ -19,6 +23,7 @@ def logout():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if 'username' in session:
+        flash("You were automatically logged out")
         return redirect(url_for('index'))
     else:
         if request.method == 'GET':
@@ -39,10 +44,36 @@ def login():
                 return redirect(url_for('index'))
 
 
-# @app.route('/admin', method=["GET", "POST"])
-# def administer():
-#     if 'username' not in session:
-#         return redirect(url_for('login'))
+@app.route('/admin', methods=["GET", "POST"])
+def administer():
+    if 'username' not in session:
+        flash("You were automatically logged out")
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        selected_plan = request.form['plan']
+        try:
+            account_policy = db_session.query(webpy.models.Account_Policies).first()
+            account_policy.maxmize_plan = selected_plan
+        except:
+        #    print("Exception")
+           account_policy = webpy.models.Account_Policies(selected_plan)
+           db_session.add(account_policy)
+        db_session.commit()
+
+        #account_policy.maxmize_plan = selected_plan
+        #if not db_session.query.all():
+        #    db_session.add(account_policy)
+
+        # if not db_session.query(exists().where(webpy.models.Account_Policies.maxmize_plan == selected_plan)).one()[0]:
+        #     account_policy = webpy.models.Account_Policies(selected_plan)
+        # else:
+        #     account_policy = db_session.query(webpy.models.Account_Policies)\
+        #         .filter(webpy.models.Account_Policies.plan == selected_plan).one()
+        # db_session.commit()
+        return redirect(url_for('index'))
+    else:
+        plans = webpy.models.Plan.query.all()
+        return render_template('admin.html', plans=plans, selected_plan=2)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -51,7 +82,7 @@ def index():
         if 'username' not in session:
             return redirect(url_for('login'))
         try:
-            print('User request: %s' % session['username'])
+            pass
         except KeyError:
             flash("You were automatically logged out")
             return redirect(url_for('login'))
