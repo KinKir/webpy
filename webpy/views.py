@@ -55,25 +55,19 @@ def administer():
             account_policy = db_session.query(webpy.models.Account_Policies).first()
             account_policy.maxmize_plan = selected_plan
         except:
-        #    print("Exception")
            account_policy = webpy.models.Account_Policies(selected_plan)
            db_session.add(account_policy)
         db_session.commit()
-
-        #account_policy.maxmize_plan = selected_plan
-        #if not db_session.query.all():
-        #    db_session.add(account_policy)
-
-        # if not db_session.query(exists().where(webpy.models.Account_Policies.maxmize_plan == selected_plan)).one()[0]:
-        #     account_policy = webpy.models.Account_Policies(selected_plan)
-        # else:
-        #     account_policy = db_session.query(webpy.models.Account_Policies)\
-        #         .filter(webpy.models.Account_Policies.plan == selected_plan).one()
-        # db_session.commit()
         return redirect(url_for('index'))
     else:
+        selected_plan = 0
+        try:
+            selected_plan = db_session.query(webpy.models.Account_Policies).first().maxmize_plan
+        except:
+            pass
+
         plans = webpy.models.Plan.query.all()
-        return render_template('admin.html', plans=plans, selected_plan=2)
+        return render_template('admin.html', plans=plans, selected_plan=selected_plan)
 
 
 @app.route('/', methods=['GET', 'POST'])
