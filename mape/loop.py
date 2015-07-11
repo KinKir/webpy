@@ -25,10 +25,10 @@ class MAPELoop(object):
             total_tasks = self.monitor.total_tasks()
             task_breakdown = self.monitor.tasks()
             plan_count = self.monitor.get_plan_count()
-            # print(self.monitor.task_count(3))
             analysis = self.analyzer.analyze(plan_count, total_tasks, task_breakdown)
-            print(analysis)
-            sleep(0.5)
+            if type(analysis) is list:
+                self.planner.plan_and_execute(analysis)
+            sleep(2)
 
 
 if __name__ == "__main__":
