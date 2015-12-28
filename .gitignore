@@ -1,1 +1,13 @@
+# Vim Files
+*.sw*
+
+# Python Files and Folders
+.ropeproject/
+bin/
+db/
+include/
+lib/
+
 *.pyc
+
+
